@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Backend temp files (uploaded audio/images)
+temp_*
+*.tmp
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# WeChat Mini Program
+miniprogram-1/miniprogram_npm/
+miniprogram-1/node_modules/
+
+# Logs
+*.log
+
+# Claude Code config
+CLAUDE.md

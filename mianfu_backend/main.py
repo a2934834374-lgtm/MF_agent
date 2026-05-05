@@ -4,9 +4,12 @@ import dashscope
 from pydantic import BaseModel
 from typing import List
 from dashscope.audio.asr import Recognition, RecognitionCallback, RecognitionResult
-import time  # 👈 确保你的文件最上面有这一行
-# 1. 填入你的真实 API Key（温馨提示：这个 Key 相当于你的钱包密码，以后毕设做完传到 GitHub 上时记得把它隐藏起来哦！）
-dashscope.api_key = "sk-4cc1753967ba48b9a813e15981ddff92"
+import time
+
+# 从环境变量读取 API Key，如未设置则抛出错误
+dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
+if not dashscope.api_key:
+    raise RuntimeError("请设置环境变量 DASHSCOPE_API_KEY")
 
 app = FastAPI()
 
@@ -64,7 +67,11 @@ async def upload_resume(file: UploadFile = File(...)):
     messages = [{"role": "user", "content": [{"image": f"file://{os.path.abspath(file_location)}"}, {"text": strict_prompt}]}]
     
     response = dashscope.MultiModalConversation.call(model='qwen-vl-plus', messages=messages)
-    return {"code": 200, "reply": response.output.choices[0].message.content[0]['text']}
+    result = {"code": 200, "reply": response.output.choices[0].message.content[0]['text']}
+    # 清理临时文件
+    if os.path.exists(file_location):
+        os.remove(file_location)
+    return result
 
 
 import asyncio
@@ -143,11 +150,15 @@ async def speech_to_text(file: UploadFile = File(...)):
         # 等阿里云确认关闭通道了，再去拿字！
         text = assistant.get_full_text()
         print(f"--- 终极破案，识别成功： {text} ---")
-        return {"code": 200, "text": text}
-
+        result = {"code": 200, "text": text}
     except Exception as e:
         print(f"--- 发生报错：{e} ---")
-        return {"code": 500, "error": str(e)}
+        result = {"code": 500, "error": str(e)}
+    finally:
+        # 清理临时文件
+        if os.path.exists(file_location):
+            os.remove(file_location)
+    return result
     # ================= 接口 D：一键生成面试评估报告 =================
 @app.post("/generate-report")
 def generate_report(user_input: UserInput):

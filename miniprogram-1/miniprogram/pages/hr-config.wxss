@@ -1,0 +1,76 @@
+/* 页面整体背景 */
+.container {
+  padding: 40rpx;
+  background-color: #f7f9fc;
+  min-height: 100vh;
+}
+
+/* 标题区样式 */
+.header {
+  margin-bottom: 60rpx;
+}
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 10rpx;
+}
+.subtitle {
+  font-size: 28rpx;
+  color: #888888;
+}
+
+/* 表单组样式 */
+.form-group {
+  margin-bottom: 50rpx;
+}
+.label {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20rpx;
+}
+
+/* 单行输入框 */
+.input-box {
+  width: 100%;
+  height: 90rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 0 30rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+}
+
+/* 多行文本框 */
+.textarea-box {
+  width: 100%;
+  height: 300rpx;
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+}
+
+/* 按钮样式 */
+.save-btn {
+  width: 100% !important;
+  height: 90rpx;
+  line-height: 90rpx;
+  background-color: #007AFF;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: bold;
+  border-radius: 45rpx;
+  margin-top: 80rpx;
+  padding: 0;
+  box-shadow: 0 8rpx 20rpx rgba(0, 122, 255, 0.3);
+}
+.save-btn:active {
+  background-color: #0062cc; /* 点击时的按压反馈 */
+}

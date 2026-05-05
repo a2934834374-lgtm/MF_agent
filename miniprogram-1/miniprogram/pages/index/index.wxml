@@ -1,0 +1,61 @@
+<view style="display: flex; justify-content: space-around; padding: 20rpx; background-color: #fff;">
+  <button type="primary" size="mini" bindtap="uploadResume">上传简历</button>
+  <button type="warn" size="mini" bindtap="generateReport">结束面试并出报告</button>
+</view>
+<view class="scene-toggle-btn" bindtap="toggleScene">
+  <text>{{isVirtualScene ? '💬 切回文字版' : '👩‍💼 开启虚拟人'}}</text>
+</view>
+<view class="restart-btn" bindtap="restartInterview">
+  <text class="restart-icon">🔄</text>
+  <text>重新开始</text>
+</view>
+<scroll-view wx:if="{{!isVirtualScene}}" class="chat-list" scroll-y="true" scroll-into-view="{{lastMessageId}}" scroll-with-animation="true">
+
+  <block wx:for="{{chatHistory}}" wx:key="index">
+    <view wx:if="{{item.role === 'system'}}" class="system-message">
+  <text class="system-text">{{item.content}}</text>
+</view>
+    
+    <view class="message-row {{item.role === 'ai' ? 'ai-row' : 'user-row'}}" id="msg-{{index}}">
+      
+      <image wx:if="{{item.role === 'ai'}}" class="avatar" src="https://img.icons8.com/color/96/000000/bot.png" />
+      <view wx:if="{{!item.isReport}}" class="bubble {{item.role === 'ai' ? 'ai-bubble' : 'user-bubble'}}">
+        <text user-select="true">{{item.content}}</text>
+      </view>
+
+      <view wx:if="{{item.isReport}}" class="report-card">
+        <view class="report-header">
+          <text class="report-title">🏆 面试权威诊断报告</text>
+        </view>
+        <view class="report-content">
+          <text user-select="true">{{item.content}}</text>
+        </view>
+      </view>
+
+      <image wx:if="{{item.role === 'user'}}" class="avatar user-avatar" src="https://img.icons8.com/color/96/000000/user.png" />
+
+    </view>
+    
+  </block>
+</scroll-view>
+<view wx:else class="virtual-scene">
+  <image class="bg-image" src="/images/interviewer.png" mode="aspectFill" />
+  
+  <view class="subtitle-box">
+     <text class="subtitle-text">{{latestAiMessage}}</text>
+  </view>
+</view>
+
+<view class="footer-bar">
+  <view class="record-toast" wx:if="{{isRecording}}">
+  <image class="record-toast-icon" src="https://img.icons8.com/ios-glyphs/90/ffffff/microphone.png"></image>
+  <text class="record-toast-text">正在聆听中...</text>
+  <text class="record-toast-hint">松开手指 发送</text>
+</view>
+  <input class="chat-input" type="text" value="{{inputValue}}" bindinput="onInput" placeholder="输入回复..." cursor-spacing="20" />
+  <view class="send-btn" bindtap="sendMessage">发送</view>
+  <view class="voice-btn" bindtouchstart="startRecord" bindtouchend="stopRecord">
+    <text>🎤 按住说话</text>
+  </view>
+  
+</view>

@@ -1,0 +1,33 @@
+<view class="history-container">
+  
+  <view class="page-header">
+    <text class="page-title">我的面试战绩</text>
+    <text class="page-subtitle">每一次复盘，都是向Offer迈进的一步</text>
+  </view>
+
+  <scroll-view class="record-list" scroll-y="true">
+    
+    <block wx:for="{{historyList}}" wx:key="id">
+      <view class="record-card">
+        
+        <view class="record-info">
+          <text class="job-title">{{item.jobTitle}}</text>
+          <text class="interview-date">{{item.date}}</text>
+        </view>
+        
+        <view class="record-score">
+          <text class="score-num {{item.score >= 80 ? 'high-score' : 'normal-score'}}">{{item.score}}</text>
+          <text class="score-label">分</text>
+        </view>
+
+      </view>
+    </block>
+
+    <view wx:if="{{historyList.length === 0}}" class="empty-state">
+      <image class="empty-icon" src="https://img.icons8.com/ios-ext/96/cccccc/box--v1.png"></image>
+      <text class="empty-text">暂无面试记录，快去大厅开启第一次挑战吧！</text>
+    </view>
+
+  </scroll-view>
+
+</view>

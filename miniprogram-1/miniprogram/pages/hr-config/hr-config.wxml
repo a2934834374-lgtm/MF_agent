@@ -1,0 +1,18 @@
+<view class="container">
+  <view class="header">
+    <text class="title">企业专属题库配置</text>
+    <text class="subtitle">设置后，AI将按照您的要求进行面试</text>
+  </view>
+
+  <view class="form-group">
+    <text class="label">🎯 面试岗位</text>
+    <input class="input-box" placeholder="如：销售工程师" bindinput="onJobInput" value="{{targetJob}}" />
+  </view>
+
+  <view class="form-group">
+    <text class="label">🧠 私房题库 / 考核重点</text>
+    <textarea class="textarea-box" placeholder="请输入重点考核内容..." bindinput="onQuestionsInput" value="{{customQuestions}}"></textarea>
+  </view>
+
+  <button class="save-btn" bindtap="saveConfig">保存配置并开始面试</button>
+</view>

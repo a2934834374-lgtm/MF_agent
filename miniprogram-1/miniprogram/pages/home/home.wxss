@@ -1,0 +1,148 @@
+/* pages/home/home.wxss */
+/* 整个页面的浅灰背景 */
+page {
+  background-color: #f7f9fc;
+}
+
+.home-container {
+  padding: 40rpx;
+}
+
+/* 顶部蓝色渐变卡片 */
+.header-card {
+  background: linear-gradient(135deg, #4a90e2, #5c9ce6);
+  border-radius: 24rpx;
+  padding: 60rpx 40rpx;
+  color: white;
+  box-shadow: 0 10rpx 30rpx rgba(74, 144, 226, 0.3);
+  margin-bottom: 40rpx;
+  width: 100%; /* 👈 宽度占据屏幕的 90%，留出呼吸感 */
+  margin: 0 auto 40rpx auto; /* 👈 核心魔法：左右 auto 会让它绝对居中，下面留出 40rpx 的空间 */
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 16rpx;
+  letter-spacing: 2rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+/* 中间白色的数据看板 */
+.stats-board {
+  display: flex;
+  justify-content: space-around;
+  background-color: #ffffff;
+  border-radius: 24rpx;
+  padding: 40rpx 0;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.04);
+  margin-bottom: 80rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-size: 52rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 10rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #888888;
+}
+
+/* 底部按钮区域 */
+.action-area {
+  text-align: center;
+  margin-top: 40rpx;
+}
+
+/* 绿色发光大按钮 */
+.start-btn {
+  background: #07c160;
+  color: white;
+  font-size: 36rpx;
+  font-weight: bold;
+  border-radius: 50rpx;
+  padding: 20rpx 0;
+  width: 80%;
+  box-shadow: 0 10rpx 24rpx rgba(7, 193, 96, 0.3);
+  margin-bottom: 24rpx;
+}
+
+/* 去掉按钮自带的丑边框 */
+.start-btn::after {
+  border: none;
+}
+
+.hint-text {
+  font-size: 24rpx;
+  color: #aaaaaa;
+}
+/* ================= 双身份切换 UI (精装调优版) ================= */
+.role-switch-box {
+  display: flex;
+  background-color: #f0f0f0;
+  border-radius: 60rpx;
+  padding: 8rpx;
+  /* 调整 margin：上边距留 40rpx 显得不拥挤，左右居中，下边距留 30rpx 跟下面的岗位保持距离 */
+  margin: 40rpx auto 30rpx; 
+  width: 88%; /* 👈 稍微加宽一点，让它和下面的蓝色大卡片宽度更匹配 */
+}
+
+.role-btn {
+  flex: 1;
+  text-align: center;
+  padding: 18rpx 0; /* 稍微撑高一点点 */
+  font-size: 28rpx;
+  color: #666;
+  border-radius: 50rpx;
+  transition: all 0.3s ease;
+  white-space: nowrap; /* 👈 核心必杀技：强制文字在一行显示，绝对不准换行！ */
+}
+.active-role {
+  background-color: #fff;
+  color: #4a90e2;
+  font-weight: bold;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05);
+}
+
+/* 企业专属配置区 */
+.enterprise-config {
+  width: 90%;
+  margin: 20rpx auto;
+  background: rgba(74, 144, 226, 0.05);
+  padding: 20rpx;
+  border-radius: 20rpx;
+  border: 1px dashed #4a90e2;
+}
+
+.config-title {
+  font-size: 26rpx;
+  color: #4a90e2;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+  display: block;
+}
+
+.config-input {
+  width: 100%;
+  height: 120rpx;
+  font-size: 24rpx;
+  background: #fff;
+  padding: 10rpx;
+  border-radius: 10rpx;
+  box-sizing: border-box;
+}

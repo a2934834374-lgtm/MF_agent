@@ -1,0 +1,251 @@
+/* 1. 整个页面的背景色：微信同款浅灰，让白色气泡更凸显 */
+page {
+  background-color: #f3f3f3;
+}
+
+/* 2. 聊天列表的范围限制 */
+.chat-list {
+  height: 70vh; /* 留出底部按钮的空间 */
+  padding: 30rpx 20rpx;
+  box-sizing: border-box;
+}
+
+/* 3. 每一排消息的通用布局 */
+.message-row {
+  display: flex;
+  margin-bottom: 40rpx;
+  align-items: flex-start; /* 让头像和气泡顶部对齐 */
+}
+
+/* AI 靠左，用户靠右 */
+.ai-row { justify-content: flex-start; }
+.user-row { justify-content: flex-end; }
+
+/* 4. 头像的高级感样式 */
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 12rpx; /* 微圆角，比纯圆更显专业 */
+  background-color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.1);
+}
+.user-avatar {
+  margin-left: 20rpx;
+}
+
+/* 5. 气泡的灵魂塑造 */
+.bubble {
+  max-width: 65%;
+  padding: 22rpx 26rpx;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  line-height: 1.5;
+  word-break: break-all; /* 防止英文把盒子撑破 */
+  box-shadow: 0 2rpx 4rpx rgba(0,0,0,0.05);
+}
+
+/* 🤖 AI 气泡：纯白底色，左上角变尖 */
+.ai-bubble {
+  background-color: #ffffff;
+  color: #333333;
+  margin-left: 20rpx;
+  border-top-left-radius: 4rpx; 
+}
+
+/* 🧑 用户气泡：微信原味翠绿，右上角变尖 */
+.user-bubble {
+  background-color: #95ec69;
+  color: #111111;
+  margin-right: 0;
+  border-top-right-radius: 4rpx; 
+}
+/* ================= 底部悬浮操作台 ================= */
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f7f7f7; /* 极简灰底色 */
+  padding: 20rpx 30rpx;
+  /* 【神级细节】完美适配苹果手机底部的小黑条！ */
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); 
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.04); /* 顶部微弱的高级阴影 */
+  z-index: 999;
+}
+
+/* 圆角输入框 */
+.chat-input {
+  flex: 1;
+  height: 76rpx;
+  background-color: #ffffff;
+  border-radius: 38rpx;
+  padding: 0 30rpx;
+  font-size: 30rpx;
+}
+
+/* 翠绿色发送按钮 */
+.send-btn {
+  margin-left: 20rpx;
+  background-color: #07c160;
+  color: white;
+  font-size: 28rpx;
+  padding: 18rpx 32rpx;
+  border-radius: 38rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 10rpx rgba(7, 193, 96, 0.3); /* 绿色发光特效 */
+}
+
+/* 科技蓝语音按钮 */
+.voice-btn {
+  margin-left: 16rpx;
+  display: flex;
+  align-items: center;
+  background-color: #4a90e2;
+  color: white;
+  padding: 16rpx 28rpx;
+  border-radius: 38rpx;
+  box-shadow: 0 4rpx 12rpx rgba(74, 144, 226, 0.4); /* 蓝色发光特效 */
+}
+
+.mic-icon {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 8rpx;
+}
+/* ================= 录音视觉反馈弹窗 ================= */
+.record-toast {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 完美的居中魔法 */
+  background-color: rgba(0, 0, 0, 0.7); /* 半透明高级黑 */
+  width: 280rpx;
+  height: 280rpx;
+  border-radius: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* 保证它永远在最上层显示 */
+}
+
+/* 麦克风图标与呼吸动画 */
+.record-toast-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 20rpx;
+  animation: breathe 1.2s infinite alternate; /* 绑定呼吸灯动画 */
+}
+
+.record-toast-text {
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+}
+
+.record-toast-hint {
+  color: #cccccc;
+  font-size: 24rpx;
+}
+
+/* 定义神级细节：呼吸灯变大变亮动画 */
+@keyframes breathe {
+  from { opacity: 0.5; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+/* ================= 悬浮重置按钮 (iOS 毛玻璃特效) ================= */
+.restart-btn {
+  position: fixed;
+  top: 80rpx; /* 距离屏幕顶部的位置 */
+  right: 500rpx; /* 靠右悬浮 */
+  background: rgba(255, 255, 255, 0.85); /* 半透明白色 */
+  padding: 12rpx 26rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.08); /* 极其轻柔的阴影 */
+  display: flex;
+  align-items: center;
+  z-index: 100; /* 确保它永远浮在最上层，不被气泡挡住 */
+  font-size: 26rpx;
+  color: #555555;
+  backdrop-filter: blur(10px); /* 核心黑科技：苹果同款背景高斯模糊 */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.restart-icon {
+  margin-right: 10rpx;
+  font-size: 28rpx;
+}
+/* ================= 系统高科技提示广播 ================= */
+.system-message {
+  display: flex;
+  justify-content: center; /* 强制居中 */
+  margin: 30rpx 0; /* 上下留白 */
+  width: 100%;
+}
+
+.system-text {
+  background-color: rgba(0, 0, 0, 0.05); /* 极其微弱的浅灰底色 */
+  color: #888888; /* 低调的高级灰文字 */
+  font-size: 24rpx;
+  padding: 12rpx 30rpx;
+  border-radius: 40rpx; /* 小药丸形状 */
+  max-width: 85%;
+  text-align: center;
+  box-shadow: inset 0 2rpx 4rpx rgba(0,0,0,0.02); /* 内阴影增加质感 */
+}
+/* ================= 场景切换按钮 ================= */
+.scene-toggle-btn {
+  position: fixed;
+  bottom: 250rpx; /* 距离底部留出空间，刚好在输入框上方一点 */
+  right: 30rpx;   /* 紧贴屏幕右侧，绝对不会挡住左边的聊天头像 */
+  background: linear-gradient(135deg, #4a90e2, #63a4ff);
+  color: white;
+  padding: 12rpx 26rpx;
+  border-radius: 40rpx;
+  font-size: 26rpx;
+  z-index: 100;
+  box-shadow: 0 4rpx 12rpx rgba(74, 144, 226, 0.4);
+}
+
+/* ================= 虚拟面试场景 ================= */
+/* 把你原来的 .virtual-scene 替换成这个： */
+.virtual-scene {
+  width: 100%;
+  height: 85vh; /* 👈 核心修改：强行占据屏幕 85% 的高度 */
+  position: relative;
+  background-color: #333333; /* 👈 核心修改：加个深灰色底。如果图片没出来，至少你能看到一块黑色的区域！ */
+  overflow: hidden;
+}
+
+.bg-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 顶部字幕条 */
+.subtitle-box {
+  position: absolute;
+  top: 40rpx;
+  left: 5%;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30rpx 40rpx;
+  border-radius: 20rpx;
+  box-sizing: border-box;
+  box-shadow: 0 8rpx 20rpx rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.5);
+  backdrop-filter: blur(10px);
+}
+
+.subtitle-text {
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.6;
+  font-weight: bold;
+}

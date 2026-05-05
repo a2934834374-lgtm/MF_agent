@@ -1,0 +1,29 @@
+<view class="container">
+  <view class="header">
+    <text class="title">企业专属题库配置</text>
+    <text class="subtitle">定制您的专属 AI 面试官提问逻辑</text>
+  </view>
+
+  <view class="form-group">
+    <text class="label">🎯 面试岗位名称</text>
+    <input 
+      class="input-box" 
+      placeholder="例如：前端开发工程师 / 销售经理" 
+      bindinput="onJobInput" 
+      value="{{targetJob}}" 
+    />
+  </view>
+
+  <view class="form-group">
+    <text class="label">🧠 私房面试题 / 考核重点</text>
+    <textarea 
+      class="textarea-box" 
+      placeholder="请输入您希望 AI 重点考察的问题。例如： 重点考察求职者的抗压能力，问一下他对我们公司业务的了解； 追问他上一段实习为什么离职..." 
+      bindinput="onQuestionsInput" 
+      value="{{customQuestions}}"
+      maxlength="500"
+    ></textarea>
+  </view>
+
+  <button class="save-btn" bindtap="saveConfig">保存配置并开启面试</button>
+</view>

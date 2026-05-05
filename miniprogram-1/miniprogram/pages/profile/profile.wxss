@@ -1,0 +1,99 @@
+/* pages/profile/profile.wxss */
+page {
+  background-color: #f7f9fc;
+}
+
+.profile-container {
+  padding: 30rpx;
+}
+
+/* 顶部信息卡片 */
+.user-header {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 40rpx;
+  border-radius: 20rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.03);
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  border: 4rpx solid #e1f0fa; /* 给头像加个淡蓝色小边框，显高级 */
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.user-desc {
+  font-size: 24rpx;
+  color: #888;
+}
+
+/* 菜单列表区 */
+.menu-list {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 0 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.03);
+  margin-bottom: 40rpx;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 36rpx 0;
+  border-bottom: 2rpx solid #f0f0f0; /* 分割线 */
+}
+
+/* 隐藏最后一个菜单项的分割线 */
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.menu-text {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.arrow {
+  color: #ccc;
+  font-family: consolas;
+  font-weight: bold;
+}
+
+/* 清除缓存按钮 */
+.logout-btn {
+  background-color: #ffffff;
+  color: #ff4d4f;
+  text-align: center;
+  padding: 30rpx 0;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.03);
+}

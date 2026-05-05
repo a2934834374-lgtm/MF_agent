@@ -1,0 +1,45 @@
+<view class="job-picker-area" style="margin-bottom: 30rpx; display: flex; flex-direction: column; align-items: center;">
+  <view class="lobby-container" wx:if="{{!isInterviewing}}"> <view class="role-switch-box">
+    <view class="role-btn {{userRole === 'candidate' ? 'active-role' : ''}}" data-role="candidate" bindtap="switchRole">🧑‍🎓 我是求职者</view>
+    <view class="role-btn {{userRole === '' ? 'active-role' : ''}}" data-role="enterprise" bindtap="switchRole">🏢 我是企业HR</view>
+  </view>
+
+  <view class="picker-box">
+     </view>
+
+
+  <view class="header-card">
+    <text class="title">欢迎来到面辅精灵</text>
+    <text class="subtitle">AI 驱动的沉浸式面试训练营</text>
+  </view>
+
+  <view class="stats-board">
+    <view class="stat-item">
+      <text class="stat-num">0</text>
+      <text class="stat-label">面试次数</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-num">--</text>
+      <text class="stat-label">平均得分</text>
+    </view>
+  </view>
+
+</view>
+
+
+<picker bindchange="onJobChange" value="{{jobIndex}}" range="{{jobList}}">
+  <view style="background: #fff; padding: 20rpx 40rpx; border-radius: 50rpx; box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05); display: inline-block;">
+    <text style="color: #666; font-size: 28rpx;">🎯 目标岗位：</text>
+    <text style="color: #4a90e2; font-weight: bold; font-size: 30rpx; margin: 0 10rpx;">{{jobList[jobIndex]}}</text>
+    <text style="color: #ccc; font-size: 24rpx;">▼</text>
+  </view>
+</picker>
+<view wx:if="{{jobList[jobIndex] === '自定义岗位 ✍️'}}" style="margin-top: 20rpx; width: 80%;">
+  <input type="text" placeholder="请输入你想面试的岗位..." value="{{customJob}}" bindinput="onCustomJobInput" style="background: #fff; padding: 20rpx 30rpx; border-radius: 40rpx; text-align: center; font-size: 28rpx; border: 2rpx dashed #4a90e2; color: #333;" />
+</view>
+
+</view>
+  <view class="action-area">
+    <button class="start-btn" bindtap="goToInterview">🚀 开始模拟面试</button>
+    <text class="hint-text">点击开始，直面 AI 面试官</text>
+  </view>

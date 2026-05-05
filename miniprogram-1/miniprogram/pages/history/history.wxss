@@ -1,0 +1,99 @@
+/* pages/history/history.wxss */
+page {
+  background-color: #f7f9fc; /* 统一的高级灰背景 */
+}
+
+.history-container {
+  padding: 40rpx;
+}
+
+/* 顶部标题栏 */
+.page-header {
+  margin-bottom: 40rpx;
+}
+
+.page-title {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: #333333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.page-subtitle {
+  font-size: 26rpx;
+  color: #888888;
+}
+
+/* 战绩卡片样式 */
+.record-card {
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx 40rpx;
+  margin-bottom: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.03); /* 极度轻柔的悬浮阴影 */
+  transition: transform 0.2s; /* 点击动画铺垫 */
+}
+
+/* 左侧信息区 */
+.record-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.job-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 12rpx;
+}
+
+.interview-date {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 右侧分数区 */
+.record-score {
+  display: flex;
+  align-items: baseline;
+}
+
+.score-num {
+  font-size: 56rpx;
+  font-weight: 900;
+  font-family: 'Courier New', Courier, monospace; /* 让数字更有科技感 */
+}
+
+.score-label {
+  font-size: 24rpx;
+  color: #888;
+  margin-left: 4rpx;
+}
+
+/* 智能颜色高亮：80分以上绿色，否则橙色 */
+.high-score { color: #07c160; }
+.normal-score { color: #ff9800; }
+
+/* 空状态样式 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100rpx;
+  opacity: 0.6;
+}
+
+.empty-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #999999;
+}

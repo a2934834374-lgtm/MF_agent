@@ -1,4 +1,9 @@
 import os
+from dotenv import load_dotenv
+
+# 加载 .env 文件
+load_dotenv()
+
 from fastapi import FastAPI, File, UploadFile
 import dashscope
 from pydantic import BaseModel

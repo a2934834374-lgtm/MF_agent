@@ -4,6 +4,17 @@
     <view class="role-btn {{userRole === '' ? 'active-role' : ''}}" data-role="enterprise" bindtap="switchRole">🏢 我是企业HR</view>
   </view>
 
+  <!-- 求职者模式：选择目标企业 -->
+  <view wx:if="{{userRole === 'candidate' && companies.length > 0}}" class="company-picker-box">
+    <picker bindchange="onCompanyChange" value="{{companyIndex}}" range="{{companies}}" range-key="{{'companyName'}}">
+      <view style="background: #fff; padding: 20rpx 40rpx; border-radius: 50rpx; box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.05); display: inline-block;">
+        <text style="color: #666; font-size: 28rpx;">🏢 目标企业：</text>
+        <text style="color: #4a90e2; font-weight: bold; font-size: 30rpx; margin: 0 10rpx;">{{companies[companyIndex].companyName}}</text>
+        <text style="color: #ccc; font-size: 24rpx;">▼</text>
+      </view>
+    </picker>
+  </view>
+
   <view class="picker-box">
      </view>
 

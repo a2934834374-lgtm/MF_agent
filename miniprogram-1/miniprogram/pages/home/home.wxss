@@ -146,3 +146,10 @@ page {
   border-radius: 10rpx;
   box-sizing: border-box;
 }
+
+/* 企业选择器 */
+.company-picker-box {
+  margin: 20rpx auto;
+  display: flex;
+  justify-content: center;
+}

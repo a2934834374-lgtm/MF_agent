@@ -2,5 +2,6 @@
 .title { display: block; font-size: 44rpx; font-weight: bold; margin-bottom: 10rpx; }
 .label { display: block; margin: 30rpx 0 20rpx; font-weight: bold; }
 .input-box, .textarea-box { width: 100%; background: #fff; border-radius: 12rpx; padding: 20rpx; box-sizing: border-box; }
+.input-box { height: 88rpx; font-size: 30rpx; }
 .textarea-box { height: 300rpx; }
 .save-btn { background: #007AFF; color: #fff; margin-top: 60rpx; border-radius: 45rpx; }

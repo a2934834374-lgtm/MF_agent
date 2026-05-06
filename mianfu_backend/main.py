@@ -32,7 +32,9 @@ class MessageItem(BaseModel):
 
 class UserInput(BaseModel):
     history: List[MessageItem]
-    job: str = "通用岗位"  # 新增：接收前端传来的岗位
+    job: str = "通用岗位"
+    role: str = "candidate"
+    custom_questions: str = ""
 
 @app.get("/")
 def read_root():
@@ -41,13 +43,20 @@ def read_root():
 # ================= 接口 A：文字聊天 (带记忆，升级为“真实面试官人设”) =================
 @app.post("/chat")
 def chat_with_ai(user_input: UserInput):
-    # 强制 AI 扮演特定岗位的技术面试官
+    # 构建系统提示词
     system_prompt = (
         f"你现在是一位世界500强企业的资深HR与技术总监。候选人当前应聘的岗位是：【{user_input.job}】。\n"
         f"规则1：你的提问必须100%围绕【{user_input.job}】的专业技能、真实业务场景或该岗位所需的软技能展开，绝不能问无关问题！\n"
         "规则2：每次只问一个问题，根据用户的回答进行深度追问。\n"
         "规则3：语气要专业、干练，带有一点面试官的压迫感。"
     )
+
+    # 如果 HR 配置了私房题库/考核重点，追加到提示词中
+    if user_input.custom_questions:
+        system_prompt += (
+            f"\n\n【企业HR特别要求】以下内容是 HR 指定的考核重点，你必须围绕这些内容进行提问和考察：\n"
+            f"{user_input.custom_questions}"
+        )
     
     messages = [{"role": "system", "content": system_prompt}]
     

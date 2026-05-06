@@ -1,7 +1,12 @@
 <view class="container">
   <view class="header">
     <text class="title">企业专属题库配置</text>
-    <text class="subtitle">设置后，AI将按照您的要求进行面试</text>
+    <text class="subtitle">配置后保存，求职者即可在大厅选择您的企业进行面试</text>
+  </view>
+
+  <view class="form-group">
+    <text class="label">🏢 企业名称</text>
+    <input class="input-box" placeholder="如：阿里巴巴、腾讯" bindinput="onCompanyInput" value="{{companyName}}" />
   </view>
 
   <view class="form-group">

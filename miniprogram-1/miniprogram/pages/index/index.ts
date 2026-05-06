@@ -36,6 +36,9 @@ onCustomQuestionsInput(e: any) {
       this.setData({ targetJob: options.job });
       wx.showToast({ title: `已为您匹配【${options.job}】面试官`, icon: 'none', duration: 2000 });
     }
+
+    // 检测是否从 HR 配置页跳转过来，自动启动面试
+    this.checkHrAutoStart();
     // 【终极强壮版】监听录音停止并自动发送（完美兼容阿里云实时语音）
     recorderManager.onStop((res) => {
       const { tempFilePath } = res;
@@ -76,6 +79,52 @@ onCustomQuestionsInput(e: any) {
           wx.showToast({ title: '网络连接失败，请检查IP', icon: 'none' });
         }
       });
+    });
+  },
+
+  // 检测是否从 HR 配置页跳转过来，自动启动面试
+  checkHrAutoStart() {
+    const pendingHrStart = wx.getStorageSync('pendingHrStart');
+    if (!pendingHrStart) return;
+    wx.removeStorageSync('pendingHrStart'); // 清除标记，防止重复触发
+
+    const targetJob = wx.getStorageSync('targetJob') || '通用岗位';
+    const customQuestions = wx.getStorageSync('customQuestions') || '';
+
+    this.setData({
+      userRole: 'hr',
+      targetJob,
+      customQuestions,
+      chatHistory: [] // 清空默认欢迎语
+    });
+
+    wx.showLoading({ title: 'AI面试官准备中...' });
+
+    wx.request({
+      url: `${BASE_URL}/chat`,
+      method: 'POST',
+      data: {
+        history: [{ role: 'user', content: '请开始面试' }],
+        job: targetJob,
+        role: 'hr',
+        custom_questions: customQuestions
+      },
+      success: (res: any) => {
+        wx.hideLoading();
+        if (res.data && res.data.code === 200) {
+          const aiReply = res.data.reply || '你好，请先做个自我介绍吧！';
+          this.setData({
+            chatHistory: [{ role: 'ai', content: aiReply }],
+            latestAiMessage: aiReply
+          });
+        } else {
+          wx.showToast({ title: 'AI启动失败，请重试', icon: 'none' });
+        }
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({ title: '连接服务器失败', icon: 'none' });
+      }
     });
   },
 

@@ -8,13 +8,21 @@ from fastapi import FastAPI, File, UploadFile
 import dashscope
 from pydantic import BaseModel
 from typing import List
+from openai import OpenAI
 from dashscope.audio.asr import Recognition, RecognitionCallback, RecognitionResult
-import time
 
-# 从环境变量读取 API Key，如未设置则抛出错误
+# DashScope (通义千问) — 用于视觉和语音
 dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
 if not dashscope.api_key:
     raise RuntimeError("请设置环境变量 DASHSCOPE_API_KEY")
+
+# DeepSeek — 用于对话和报告生成（OpenAI 兼容接口）
+deepseek_client = OpenAI(
+    api_key=os.getenv("DEEPSEEK_API_KEY"),
+    base_url="https://api.deepseek.com"
+)
+if not deepseek_client.api_key:
+    raise RuntimeError("请设置环境变量 DEEPSEEK_API_KEY")
 
 app = FastAPI()
 
@@ -48,11 +56,16 @@ def chat_with_ai(user_input: UserInput):
         role = "assistant" if msg.role == "ai" else msg.role
         messages.append({"role": role, "content": msg.content})
         
-    response = dashscope.Generation.call(model='qwen-turbo', messages=messages, result_format='message')
-    return {"code": 200, "reply": response.output.choices[0].message.content}
+    response = deepseek_client.chat.completions.create(
+        model='deepseek-chat',
+        messages=messages,
+    )
+    if not response.choices:
+        return {"code": 500, "error": "DeepSeek API 返回为空"}
+    return {"code": 200, "reply": response.choices[0].message.content}
 
 
-# ================= 接口 B：上传简历 (视觉大模型，升级为“精准破冰开场”) =================
+# ================= 接口 B：上传简历 (视觉大模型，升级为”精准破冰开场”) =================
 @app.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...)):
     file_location = f"temp_{file.filename}"
@@ -72,7 +85,10 @@ async def upload_resume(file: UploadFile = File(...)):
     messages = [{"role": "user", "content": [{"image": f"file://{os.path.abspath(file_location)}"}, {"text": strict_prompt}]}]
     
     response = dashscope.MultiModalConversation.call(model='qwen-vl-plus', messages=messages)
-    result = {"code": 200, "reply": response.output.choices[0].message.content[0]['text']}
+    if response.status_code != 200:
+        result = {"code": 500, "error": f"DashScope API 错误: {response.message}"}
+    else:
+        result = {"code": 200, "reply": response.output.choices[0].message.content[0]['text']}
     # 清理临时文件
     if os.path.exists(file_location):
         os.remove(file_location)
@@ -132,7 +148,7 @@ async def speech_to_text(file: UploadFile = File(...)):
 
     assistant = SpeechAssistant()
     recognition = dashscope.audio.asr.Recognition(
-        model='qwen3-tts-vc-2026-01-22',
+        model='paraformer-realtime-8k-v2',
         format='mp3',
         sample_rate=16000,
         callback=assistant
@@ -196,9 +212,14 @@ def generate_report(user_input: UserInput):
     ]
     
     try:
-        # 召唤大模型进行深度总结
-        response = dashscope.Generation.call(model='qwen-turbo', messages=messages, result_format='message')
-        report_text = response.output.choices[0].message.content
+        # 召唤 DeepSeek 进行深度总结
+        response = deepseek_client.chat.completions.create(
+            model='deepseek-chat',
+            messages=messages,
+        )
+        if not response.choices:
+            return {"code": 500, "error": "DeepSeek API 返回为空"}
+        report_text = response.choices[0].message.content
         
         print(f"--- 报告生成成功，即将发送给手机 ---")
         return {"code": 200, "report": report_text}

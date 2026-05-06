@@ -13,7 +13,7 @@ Page({
   switchRole() {
     wx.vibrateShort({ type: 'medium' });
     wx.navigateTo({
-      url: '/pages/hr-config' 
+      url: '/pages/hr-config/hr-config'
     });
   },
   // 新增：监听自定义岗位的输入

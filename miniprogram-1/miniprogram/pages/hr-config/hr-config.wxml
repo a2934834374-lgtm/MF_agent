@@ -14,10 +14,9 @@
     <input class="input-box" placeholder="如：销售工程师" bindinput="onJobInput" value="{{targetJob}}" />
   </view>
 
-  <view class="form-group">
-    <text class="label">🧠 私房题库 / 考核重点</text>
-    <textarea class="textarea-box" placeholder="请输入重点考核内容..." bindinput="onQuestionsInput" value="{{customQuestions}}"></textarea>
-  </view>
+  <button class="assessment-btn" bindtap="goAssessment">🎯 配置考核重点</button>
 
   <button class="save-btn" bindtap="saveConfig">保存配置并开始面试</button>
+
+  <button class="records-btn" bindtap="viewRecords">📋 查看求职者面试记录</button>
 </view>

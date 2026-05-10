@@ -24,12 +24,16 @@ Page({
 
   // 清除本地缓存
   clearCache() {
-    wx.showLoading({ title: '正在清理...' });
-
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.showToast({ title: '清理成功！', icon: 'success' });
-    }, 800);
+    wx.showModal({
+      title: '确认清除',
+      content: '将清除所有面试记录和配置数据，确定吗？',
+      success: (res) => {
+        if (res.confirm) {
+          wx.clearStorageSync();
+          wx.showToast({ title: '已清除所有缓存', icon: 'success' });
+        }
+      }
+    });
   },
 
   onLoad() {},

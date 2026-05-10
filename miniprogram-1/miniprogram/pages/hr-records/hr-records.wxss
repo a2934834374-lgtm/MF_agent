@@ -2,7 +2,7 @@ page {
   background-color: #f7f9fc;
 }
 
-.history-container {
+.container {
   padding: 40rpx;
 }
 

@@ -1,23 +1,21 @@
 Page({
   data: {
     companyName: '',
-    targetJob: '',
-    customQuestions: ''
+    targetJob: ''
   },
   onLoad() {
     // 进来时先读取之前的配置
     this.setData({
       companyName: wx.getStorageSync('companyName') || '',
-      targetJob: wx.getStorageSync('targetJob') || '',
-      customQuestions: wx.getStorageSync('customQuestions') || ''
+      targetJob: wx.getStorageSync('targetJob') || ''
     });
   },
   onCompanyInput(e: any) { this.setData({ companyName: e.detail.value }); },
   onJobInput(e: any) { this.setData({ targetJob: e.detail.value }); },
-  onQuestionsInput(e: any) { this.setData({ customQuestions: e.detail.value }); },
 
   saveConfig() {
-    const { companyName, targetJob, customQuestions } = this.data;
+    const { companyName, targetJob } = this.data;
+    const customQuestions = wx.getStorageSync('customQuestions') || '';
     if (!companyName.trim()) {
       wx.showToast({ title: '请输入企业名称', icon: 'none' });
       return;
@@ -50,10 +48,24 @@ Page({
       icon: 'success',
       success: () => {
         setTimeout(() => {
-          // 🌟 关键：因为 index 是底部菜单页，必须用 switchTab
-          wx.switchTab({ url: '/pages/index/index' });
+          // index 不是 tab 页，用 navigateTo
+          wx.navigateTo({ url: '/pages/index/index' });
         }, 1500);
       }
+    });
+  },
+
+  goAssessment() {
+    // 提前将当前输入的企业名写入存储，确保考核配置页可读取
+    wx.setStorageSync('companyName', this.data.companyName);
+    wx.navigateTo({
+      url: '/pages/hr-assessment/hr-assessment'
+    });
+  },
+
+  viewRecords() {
+    wx.navigateTo({
+      url: '/pages/hr-records/hr-records?companyName=' + encodeURIComponent(this.data.companyName)
     });
   }
 });

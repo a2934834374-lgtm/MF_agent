@@ -1,33 +1,46 @@
 <view class="history-container">
-  
   <view class="page-header">
     <text class="page-title">我的面试战绩</text>
     <text class="page-subtitle">每一次复盘，都是向Offer迈进的一步</text>
   </view>
 
   <scroll-view class="record-list" scroll-y="true">
-    
     <block wx:for="{{historyList}}" wx:key="id">
-      <view class="record-card">
-        
-        <view class="record-info">
-          <text class="job-title">{{item.jobTitle}}</text>
-          <text class="interview-date">{{item.date}}</text>
-        </view>
-        
-        <view class="record-score">
-          <text class="score-num {{item.score >= 80 ? 'high-score' : 'normal-score'}}">{{item.score}}</text>
-          <text class="score-label">分</text>
+      <view class="record-card" bindtap="toggleExpand" data-index="{{index}}">
+        <view class="record-summary">
+          <view class="record-info">
+            <text class="company-tag" wx:if="{{item.companyName}}">{{item.companyName}}</text>
+            <text class="job-title">{{item.jobTitle}}</text>
+            <text class="interview-date">{{item.date}}</text>
+          </view>
+          <view class="record-score">
+            <text class="score-num {{item.score >= 80 ? 'high-score' : 'normal-score'}}">{{item.score}}</text>
+            <text class="score-label">分</text>
+          </view>
+          <text class="expand-icon">{{item._expanded ? '▲' : '▼'}}</text>
         </view>
 
+        <view wx:if="{{item._expanded}}" class="chat-detail">
+          <view class="divider"></view>
+          <block wx:for="{{item.chatHistory}}" wx:for-index="msgIdx" wx:key="msgIdx">
+            <view class="msg-row {{item.role === 'user' ? 'msg-user-row' : 'msg-ai-row'}}">
+              <view class="msg-bubble {{item.role === 'user' ? 'msg-user' : 'msg-ai'}} {{item.role === 'system' ? 'msg-system' : ''}}">
+                <text class="msg-label" wx:if="{{item.role === 'user'}}">我</text>
+                <text class="msg-label" wx:elif="{{item.role === 'ai'}}">AI 面试官</text>
+                <text class="msg-label" wx:else>系统提示</text>
+                <text class="msg-content">{{item.content}}</text>
+              </view>
+            </view>
+          </block>
+          <view wx:if="{{!item.chatHistory || item.chatHistory.length === 0}}" class="no-chat">
+            <text>暂无对话内容</text>
+          </view>
+        </view>
       </view>
     </block>
 
     <view wx:if="{{historyList.length === 0}}" class="empty-state">
-      <image class="empty-icon" src="https://img.icons8.com/ios-ext/96/cccccc/box--v1.png"></image>
       <text class="empty-text">暂无面试记录，快去大厅开启第一次挑战吧！</text>
     </view>
-
   </scroll-view>
-
 </view>

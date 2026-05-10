@@ -1,0 +1,44 @@
+<view class="container">
+  <view class="page-header">
+    <text class="page-title">考核重点配置</text>
+    <text class="page-subtitle">选择您想重点考核的方向和具体技能</text>
+  </view>
+
+  <block wx:for="{{categories}}" wx:key="name">
+    <view class="category-card">
+      <view class="category-header">
+        <view class="category-left">
+          <view class="switch {{item.enabled ? 'switch-on' : 'switch-off'}}" bindtap="toggleEnabled" data-index="{{index}}">
+            <view class="switch-knob {{item.enabled ? 'knob-on' : 'knob-off'}}"></view>
+          </view>
+          <text class="category-name {{item.enabled ? '' : 'disabled-text'}}">{{item.name}}</text>
+        </view>
+        <view class="category-right">
+          <text class="count-badge" wx:if="{{item.enabled}}">{{item.selectedCount}}/{{item.items.length}}</text>
+          <text class="expand-btn" bindtap="toggleExpand" data-index="{{index}}">{{item.expanded ? '▲' : '▼'}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{item.expanded}}" class="item-list">
+        <view
+          wx:for="{{item.items}}"
+          wx:for-index="itemIdx"
+          wx:key="label"
+          class="item-row {{item.checked ? 'item-checked' : ''}}"
+          bindtap="toggleItem"
+          data-cat-idx="{{index}}"
+          data-item-idx="{{itemIdx}}"
+        >
+          <view class="checkbox {{item.checked ? 'checkbox-checked' : 'checkbox-unchecked'}}">
+            <text wx:if="{{item.checked}}" class="checkmark">✓</text>
+          </view>
+          <text class="item-label {{item.checked ? '' : 'disabled-text'}}">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="footer-actions">
+    <button class="save-btn" bindtap="saveConfig">保存配置</button>
+  </view>
+</view>

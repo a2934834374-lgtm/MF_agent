@@ -17,6 +17,7 @@ Page({
     // 用于控制屏幕自动滚动的标记
     lastMessageId: '' ,
     isRecording: false, // <-- 新加这个：控制录音弹窗是否显示
+    companyName: '', // 企业名称（HR 面试时使用）
   },
 // 切换场景魔法
 toggleScene() {
@@ -32,54 +33,63 @@ onCustomQuestionsInput(e: any) {
   this.setData({ customQuestions: e.detail.value });
 },
   onLoad(options: any) {
-    if (options.job) {
-      this.setData({ targetJob: options.job });
-      wx.showToast({ title: `已为您匹配【${options.job}】面试官`, icon: 'none', duration: 2000 });
+    // 从 storage 读取岗位参数（switchTab 无法传参，求职者跳转时通过 storage 传递）
+    const pendingJob = wx.getStorageSync('pendingJob') || options.job || '';
+    if (pendingJob) {
+      wx.removeStorageSync('pendingJob');
+      this.setData({ targetJob: pendingJob });
+      wx.showToast({ title: `已为您匹配【${pendingJob}】面试官`, icon: 'none', duration: 2000 });
     }
 
-    // 检测是否从 HR 配置页跳转过来，自动启动面试
-    this.checkHrAutoStart();
     // 【终极强壮版】监听录音停止并自动发送（完美兼容阿里云实时语音）
     recorderManager.onStop((res) => {
       const { tempFilePath } = res;
       wx.showLoading({ title: '正在转换文字...' });
-      
-      wx.uploadFile({
-        url: `${BASE_URL}/speech-to-text`,
-        filePath: tempFilePath,
-        name: 'file',
-        success: (uploadRes) => {
-          wx.hideLoading();
-          try {
-            // 强制解析后端传回的数据
-            const asrData = JSON.parse(uploadRes.data.trim());
 
-            // 暴力提取：无论后端把文字放在 text 还是其他字段，都强行抓取
-            const recognizedText = asrData.text || asrData.reply || asrData.transcription || "";
-            
-            if (recognizedText && recognizedText.trim().length > 0) {
-              // 抓取成功，立刻填入输入框，并触发发送
-              this.setData({ 
-                inputValue: recognizedText.trim() 
-              }, () => {
-                this.sendMessage(); // 自动调用发送函数，实现语音直接转对话
-              });
-            } else {
-              // 只有当真的提取不到任何字时，才提示没听清
-              wx.showToast({ title: '没听清，请大声点', icon: 'none' });
+      const fs = wx.getFileSystemManager();
+      fs.readFile({
+        filePath: tempFilePath,
+        encoding: 'base64',
+        success: (readRes) => {
+          wx.request({
+            url: `${BASE_URL}/speech-to-text`,
+            method: 'POST',
+            data: {
+              audio_base64: readRes.data,
+              format: 'mp3'
+            },
+            success: (reqRes: any) => {
+              wx.hideLoading();
+              try {
+                const asrData = reqRes.data;
+                const recognizedText = asrData.text || asrData.reply || asrData.transcription || '';
+                if (recognizedText && recognizedText.trim().length > 0) {
+                  this.setData({ inputValue: recognizedText.trim() }, () => { this.sendMessage(); });
+                } else {
+                  wx.showToast({ title: '没听清，请大声点', icon: 'none' });
+                }
+              } catch (e) {
+                console.error('语音解析失败', reqRes.data);
+                wx.showToast({ title: '语音解析出错了', icon: 'none' });
+              }
+            },
+            fail: () => {
+              wx.hideLoading();
+              wx.showToast({ title: '语音识别连接失败', icon: 'none' });
             }
-          } catch (e) {
-            console.error("解析返回数据失败，原始数据是：", uploadRes.data);
-            wx.showToast({ title: '语音解析出错了', icon: 'none' });
-          }
+          });
         },
-        fail: (err) => {
+        fail: () => {
           wx.hideLoading();
-          console.error("录音上传网络错误：", err);
-          wx.showToast({ title: '网络连接失败，请检查IP', icon: 'none' });
+          wx.showToast({ title: '读取录音文件失败', icon: 'none' });
         }
       });
     });
+  },
+
+  // 每次页面显示时检测 HR 启动（每次都会检查 pendingHrStart，消费后即移除不会重复触发）
+  onShow() {
+    this.checkHrAutoStart();
   },
 
   // 检测是否从 HR 配置页跳转过来，自动启动面试
@@ -90,11 +100,13 @@ onCustomQuestionsInput(e: any) {
 
     const targetJob = wx.getStorageSync('targetJob') || '通用岗位';
     const customQuestions = wx.getStorageSync('customQuestions') || '';
+    const companyName = wx.getStorageSync('companyName') || '';
 
     this.setData({
       userRole: 'hr',
       targetJob,
       customQuestions,
+      companyName,
       chatHistory: [] // 清空默认欢迎语
     });
 
@@ -367,9 +379,12 @@ restartInterview() {
           let records = wx.getStorageSync('interviewRecords') || [];
           records.unshift({
             id: Date.now().toString(),
-            jobTitle: 'AI 综合模拟面试', 
+            companyName: wx.getStorageSync('companyName') || this.data.companyName || '',
+            jobTitle: this.data.targetJob,
             date: dateStr,
-            score: scoreNum
+            score: scoreNum,
+            userRole: this.data.userRole,
+            chatHistory: this.data.chatHistory
           });
           wx.setStorageSync('interviewRecords', records);
           // ==========================================================

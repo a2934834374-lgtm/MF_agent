@@ -37,3 +37,7 @@ miniprogram-1/node_modules/
 
 # Claude Code config
 CLAUDE.md
+
+# Tunnel tools
+natapp/
+natapp.ini

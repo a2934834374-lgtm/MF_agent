@@ -149,11 +149,18 @@ class SpeechAssistant(dashscope.audio.asr.RecognitionCallback):
         return "".join(sorted_texts)
     
     # ================== 2. 语音转文字接口 ==================
+
+class AudioInput(BaseModel):
+    audio_base64: str
+    format: str = "mp3"
+
 @app.post("/speech-to-text")
-async def speech_to_text(file: UploadFile = File(...)):
-    file_location = f"temp_{file.filename}"
+async def speech_to_text(audio: AudioInput):
+    import base64
+    audio_bytes = base64.b64decode(audio.audio_base64)
+    file_location = f"temp_audio.{audio.format}"
     with open(file_location, "wb") as f:
-        f.write(await file.read())
+        f.write(audio_bytes)
 
     assistant = SpeechAssistant()
     recognition = dashscope.audio.asr.Recognition(
@@ -164,32 +171,31 @@ async def speech_to_text(file: UploadFile = File(...)):
     )
 
     try:
-        print("🎙️ 开始把语音发给阿里云...")
+        print("开始把语音发给阿里云...")
         recognition.start()
         with open(file_location, 'rb') as f:
             recognition.send_audio_frame(f.read())
         recognition.stop()
         
-        # 🌟 核心修复3：死死等住！绝对不准提前抢跑！
-        print("⏳ 正在等待阿里云把所有文字吐出来...")
+        print("正在等待阿里云把所有文字吐出来...")
         wait_time = 0
-        while not assistant.is_finished and wait_time < 150: # 最多等 15 秒钟防卡死
+        while not assistant.is_finished and wait_time < 150:
             await asyncio.sleep(0.1)
             wait_time += 1
 
-        # 等阿里云确认关闭通道了，再去拿字！
         text = assistant.get_full_text()
-        print(f"--- 终极破案，识别成功： {text} ---")
+        print(f"识别成功： {text}")
         result = {"code": 200, "text": text}
     except Exception as e:
-        print(f"--- 发生报错：{e} ---")
+        print(f"发生报错：{e}")
         result = {"code": 500, "error": str(e)}
     finally:
-        # 清理临时文件
         if os.path.exists(file_location):
             os.remove(file_location)
     return result
-    # ================= 接口 D：一键生成面试评估报告 =================
+
+# ================= 接口 D：一键生成面试评估报告 =================
+@app.post("/generate-report")
 @app.post("/generate-report")
 def generate_report(user_input: UserInput):
     # 1. 把你们刚才所有的聊天记录，拼接成一段完整的“面试录音稿”

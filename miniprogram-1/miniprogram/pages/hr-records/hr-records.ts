@@ -1,3 +1,5 @@
+import { BASE_URL } from '../../config/index';
+
 Page({
   data: {
     companyName: '',
@@ -11,22 +13,39 @@ Page({
       title: '求职者面试记录'
     });
 
-    const allRecords = wx.getStorageSync('interviewRecords') || [];
+    // 先加载本地记录作为即时展示，再从服务端拉取完整列表
+    this.loadLocalRecords(companyName);
+    this.fetchRemoteRecords(companyName);
+  },
 
-    console.log('[hr-records] 总记录数:', allRecords.length);
-    console.log('[hr-records] 筛选企业名:', companyName);
-    if (allRecords.length > 0) {
-      console.log('[hr-records] 记录中的企业名:', allRecords.map((r: any) => r.companyName));
-    }
+  loadLocalRecords(companyName: string) {
+    const localRecords = wx.getStorageSync('interviewRecords') || [];
+    this.displayRecords(localRecords, companyName, '本地缓存');
+  },
 
-    // 不再按 companyName 过滤，显示全部记录
-    // 卡片上会显示企业标签，HR 可以直观识别
+  fetchRemoteRecords(companyName: string) {
+    wx.request({
+      url: `${BASE_URL}/records`,
+      method: 'GET',
+      success: (res: any) => {
+        if (res.data && res.data.code === 200 && res.data.records) {
+          this.displayRecords(res.data.records, companyName, '服务端');
+        }
+      },
+      fail: () => console.log('服务端记录拉取失败，仅展示本地记录')
+    });
+  },
+
+  displayRecords(allRecords: any[], companyName: string, source: string) {
+    // 只保留企业面试记录（滤除自行模拟面试）
+    const hrRecords = allRecords.filter((r: any) => r.userRole === 'hr');
+    console.log(`[hr-records] 数据来源: ${source}, 总记录数: ${allRecords.length}, 企业记录: ${hrRecords.length}`);
+
     const debugInfo = companyName
-      ? `共 ${allRecords.length} 条记录`
-      : `共 ${allRecords.length} 条记录`;
+      ? `共 ${hrRecords.length} 条记录`
+      : `共 ${hrRecords.length} 条记录`;
 
-    // 为每条记录添加展开标记，按日期从新到旧排序
-    let sorted = [...allRecords].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    let sorted = [...hrRecords].sort((a: any, b: any) => (b.date || '').localeCompare(a.date || ''));
 
     sorted = sorted.map((r: any) => ({
       ...r,

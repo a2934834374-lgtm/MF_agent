@@ -1,4 +1,5 @@
-// pages/profile/profile.ts
+import { BASE_URL } from '../../config/index';
+
 Page({
   data: {
     // 页面数据占位，可扩展
@@ -22,7 +23,7 @@ Page({
     }
   },
 
-  // 清除本地缓存
+  // 清除本地缓存 + 服务端记录
   clearCache() {
     wx.showModal({
       title: '确认清除',
@@ -30,6 +31,12 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.clearStorageSync();
+          // 同步清除服务端记录
+          wx.request({
+            url: `${BASE_URL}/records`,
+            method: 'DELETE',
+            fail: () => console.log('服务端记录清除失败（不影响本地）')
+          });
           wx.showToast({ title: '已清除所有缓存', icon: 'success' });
         }
       }

@@ -41,3 +41,6 @@ CLAUDE.md
 # Tunnel tools
 natapp/
 natapp.ini
+
+# Runtime data
+interview_records.json

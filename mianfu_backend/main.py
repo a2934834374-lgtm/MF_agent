@@ -4,12 +4,12 @@ from dotenv import load_dotenv
 # 加载 .env 文件
 load_dotenv()
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Body
 import dashscope
 from pydantic import BaseModel
 from typing import List
 from openai import OpenAI
-from dashscope.audio.asr import Recognition, RecognitionCallback, RecognitionResult
+from dashscope.audio.asr import Recognition, RecognitionCallback
 
 # DashScope (通义千问) — 用于视觉和语音
 dashscope.api_key = os.getenv("DASHSCOPE_API_KEY")
@@ -196,7 +196,6 @@ async def speech_to_text(audio: AudioInput):
 
 # ================= 接口 D：一键生成面试评估报告 =================
 @app.post("/generate-report")
-@app.post("/generate-report")
 def generate_report(user_input: UserInput):
     # 1. 把你们刚才所有的聊天记录，拼接成一段完整的“面试录音稿”
     chat_content = "\n".join([f"{'面试官' if msg.role == 'ai' else '候选人'}: {msg.content}" for msg in user_input.history])
@@ -241,4 +240,50 @@ def generate_report(user_input: UserInput):
         
     except Exception as e:
         print(f"--- 报告生成报错：{e} ---")
+        return {"code": 500, "error": str(e)}
+
+# ================= 接口 E：保存面试记录到服务端（跨设备共享） =================
+import json
+from pathlib import Path
+
+RECORDS_FILE = Path("interview_records.json")
+
+def load_records():
+    if RECORDS_FILE.exists():
+        return json.loads(RECORDS_FILE.read_text(encoding="utf-8"))
+    return []
+
+def save_records(records):
+    RECORDS_FILE.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
+
+@app.post("/save-record")
+def save_record(data: dict = Body(...)):
+    try:
+        records = load_records()
+        records.insert(0, data)
+        # 最多保留 500 条
+        records = records[:500]
+        save_records(records)
+        return {"code": 200, "message": "saved"}
+    except Exception as e:
+        print(f"--- 保存记录报错：{e} ---")
+        return {"code": 500, "error": str(e)}
+
+@app.get("/records")
+def get_records():
+    try:
+        records = load_records()
+        return {"code": 200, "records": records}
+    except Exception as e:
+        print(f"--- 读取记录报错：{e} ---")
+        return {"code": 500, "error": str(e)}
+
+@app.delete("/records")
+def delete_all_records():
+    try:
+        if RECORDS_FILE.exists():
+            RECORDS_FILE.write_text("[]", encoding="utf-8")
+        return {"code": 200, "message": "cleared"}
+    except Exception as e:
+        print(f"--- 清除记录报错：{e} ---")
         return {"code": 500, "error": str(e)} 

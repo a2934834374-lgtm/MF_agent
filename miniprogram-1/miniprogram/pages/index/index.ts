@@ -225,12 +225,6 @@ onCustomQuestionsInput(e: any) {
             }
           }, 50);  // 增大到50ms，减少渲染频率
           // =======================================================
-          
-          this.setData({
-            chatHistory: finalHistory,
-            // 自动滚动到最新一条消息
-            lastMessageId: `msg-${finalHistory.length - 1}`
-          });
         } else {
           wx.showToast({ title: 'AI思考失败', icon: 'none' });
         }
@@ -364,11 +358,16 @@ restartInterview() {
           });
           
           // ================= 【核心绝杀：数据存储闭环】 =================
-          // 2. 用正则魔法，从 AI 的长篇报告里自动抓取它打的分数 (例如从"【综合评分】：85分"里抓出 85)
+          // 2. 从报告里提取四个维度分数，取平均值
           let scoreNum = 80; // 默认保底分
-          const scoreMatch = reportText.match(/【综合评分】.*?(\d{1,3})/);
-          if (scoreMatch && scoreMatch[1]) {
-            scoreNum = parseInt(scoreMatch[1]);
+          const dims = ['逻辑思维', '内容深度', '表达流畅度', '岗位匹配度'];
+          const scores: number[] = [];
+          for (const dim of dims) {
+            const m = reportText.match(new RegExp(dim + '.*?(\\d{1,3})'));
+            if (m) scores.push(parseInt(m[1], 10));
+          }
+          if (scores.length >= 2) {
+            scoreNum = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
           }
 
           // 3. 获取当前时间
@@ -387,8 +386,15 @@ restartInterview() {
             chatHistory: this.data.chatHistory
           });
           wx.setStorageSync('interviewRecords', records);
+          // 5. 同步到服务端，供 HR 跨设备查看
+          wx.request({
+            url: `${BASE_URL}/save-record`,
+            method: 'POST',
+            data: records[0],
+            fail: () => console.log('服务端记录同步失败（不影响本地保存）')
+          });
           // ==========================================================
-          
+
           // 弹个窗庆祝一下
           wx.showModal({
             title: '面试结束',

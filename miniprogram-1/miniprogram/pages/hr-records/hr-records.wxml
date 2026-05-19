@@ -13,6 +13,7 @@
       <view class="record-summary">
         <view class="record-info">
           <text class="company-tag" wx:if="{{item.companyName}}">{{item.companyName}}</text>
+          <text class="candidate-tag">{{item.candidateName || '匿名求职者'}}</text>
           <text class="job-title">{{item.jobTitle}}</text>
           <text class="interview-date">{{item.date}}</text>
         </view>

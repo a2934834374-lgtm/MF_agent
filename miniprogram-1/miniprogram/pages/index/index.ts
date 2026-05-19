@@ -379,6 +379,7 @@ restartInterview() {
           records.unshift({
             id: Date.now().toString(),
             companyName: wx.getStorageSync('companyName') || this.data.companyName || '',
+            candidateName: wx.getStorageSync('candidateName') || '匿名求职者',
             jobTitle: this.data.targetJob,
             date: dateStr,
             score: scoreNum,

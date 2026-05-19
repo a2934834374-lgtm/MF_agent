@@ -51,9 +51,13 @@
   <view wx:if="{{jobList[jobIndex] === '自定义岗位 ✍️'}}" style="margin-top: 20rpx; width: 80%;">
     <input type="text" placeholder="请输入你想面试的岗位..." value="{{customJob}}" bindinput="onCustomJobInput" style="background: #fff; padding: 20rpx 30rpx; border-radius: 40rpx; text-align: center; font-size: 28rpx; border: 2rpx dashed #4a90e2; color: #333;" />
   </view>
+
+  <view wx:if="{{userRole === 'candidate'}}" style="margin-top: 20rpx; width: 80%;">
+    <input type="text" placeholder="请输入你的姓名（选填）" value="{{candidateName}}" bindinput="onNameInput" style="background: #fff; padding: 20rpx 30rpx; border-radius: 40rpx; text-align: center; font-size: 28rpx; border: 2rpx solid #e0e0e0; color: #333;" />
+  </view>
 </view>
 
 <view class="action-area">
-  <button class="start-btn" bindtap="goToInterview">🚀 开始模拟面试</button>
+  <button class="start-btn" bindtap="goToInterview">{{useCompany ? '🚀 开始企业面试' : '🚀 开始模拟面试'}}</button>
   <text class="hint-text">点击开始，直面 AI 面试官</text>
 </view>

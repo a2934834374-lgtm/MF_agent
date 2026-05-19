@@ -54,6 +54,20 @@ page {
   align-self: flex-start;
 }
 
+.candidate-tag {
+  display: inline-block;
+  background: #f0f0f0;
+  color: #666;
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  align-self: flex-start;
+  max-width: 200rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .job-title {
   font-size: 32rpx;
   font-weight: bold;

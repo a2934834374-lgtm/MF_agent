@@ -10,12 +10,12 @@ Page({
     const addExpand = (r: any) => ({ ...r, _expanded: false });
 
     const selfRecords = records
-      .filter((r: any) => r.userRole !== 'hr')
+      .filter((r: any) => !r.companyName)
       .sort((a: any, b: any) => (b.date || '').localeCompare(a.date || ''))
       .map(addExpand);
 
     const companyRecords = records
-      .filter((r: any) => r.userRole === 'hr')
+      .filter((r: any) => r.companyName)
       .sort((a: any, b: any) => (b.date || '').localeCompare(a.date || ''))
       .map(addExpand);
 

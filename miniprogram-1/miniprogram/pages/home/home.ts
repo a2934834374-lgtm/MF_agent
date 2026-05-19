@@ -2,6 +2,7 @@ Page({
   data: {
     userRole: 'candidate',
     customQuestions: '',
+    candidateName: '',
     jobList: ['前端开发工程师', '后端开发工程师', '产品经理', 'UI/UX设计师', '新媒体运营', '自定义岗位 ✍️'],
     jobIndex: 0,
     customJob: '',
@@ -25,6 +26,10 @@ Page({
 
   toggleCompany() {
     this.setData({ useCompany: !this.data.useCompany });
+  },
+
+  onNameInput(e: any) {
+    this.setData({ candidateName: e.detail.value });
   },
 
   onCustomJobInput(e: any) {
@@ -73,6 +78,15 @@ Page({
 
     wx.setStorageSync('userRole', userRole);
     wx.setStorageSync('customQuestions', customQuestions);
+
+    // 候选人使用企业配置时，补存 companyName 和 candidateName
+    if (userRole === 'candidate' && this.data.useCompany && this.data.companies.length > 0) {
+      wx.setStorageSync('companyName', this.data.companies[this.data.companyIndex].companyName);
+      wx.setStorageSync('candidateName', this.data.candidateName);
+    } else {
+      wx.removeStorageSync('candidateName');
+      wx.removeStorageSync('companyName');
+    }
 
     // 如果选了自定义岗位
     if (selectedJob === '自定义岗位 ✍️') {

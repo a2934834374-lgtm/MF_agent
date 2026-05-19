@@ -41,17 +41,11 @@ Page({
     }
     wx.setStorageSync('companies', companies);
 
-    wx.setStorageSync('pendingHrStart', true); // 标记：跳转后自动开始面试
+    wx.removeStorageSync('pendingHrStart'); // 清除自动开始标记，仅保存配置
 
     wx.showToast({
-      title: '配置已生效',
-      icon: 'success',
-      success: () => {
-        setTimeout(() => {
-          // index 不是 tab 页，用 navigateTo
-          wx.navigateTo({ url: '/pages/index/index' });
-        }, 1500);
-      }
+      title: '配置已保存',
+      icon: 'success'
     });
   },
 

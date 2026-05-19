@@ -16,7 +16,7 @@
 
   <button class="assessment-btn" bindtap="goAssessment">🎯 配置考核重点</button>
 
-  <button class="save-btn" bindtap="saveConfig">保存配置并开始面试</button>
+  <button class="save-btn" bindtap="saveConfig">保存配置</button>
 
   <button class="records-btn" bindtap="viewRecords">📋 查看求职者面试记录</button>
 </view>
